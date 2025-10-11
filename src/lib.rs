@@ -46,7 +46,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .compiler(&format!("{}/.local/bin/c3c-0.7.6", env!("HOME")))
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -63,7 +63,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .linking_mode(LinkingMode::Dynamic)
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -80,7 +80,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .optimization_level(OptimizationLevel::O1)
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -101,7 +101,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .debug_info(false)
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -118,7 +118,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
     /// ```
@@ -143,7 +143,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .files(["extern/thingmabob.c3", "extern/thingmajane.c3"])
     ///     .compile("thing");
     /// ```
@@ -166,7 +166,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .feature("foo")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -185,7 +185,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .features(["foo", "bar"])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -208,7 +208,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .arg("--no-headers")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -225,7 +225,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .args(["--no-headers", "--use-old-enums"])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -250,7 +250,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .linker_argument("--enable-linker-version")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -269,7 +269,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .linker_arguments(["--enable-linker-version", "-EB"])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -294,7 +294,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .environment_variable(("FOO", "BAR"))
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -318,7 +318,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .environment_variables([("VAR_1", "FOO"), ("VAR_2", "BAR")])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -347,7 +347,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .compiled_lib_dir("libs")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -372,7 +372,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .compiled_lib_dirs(["libs", &format("{}/.local.libs", env!("HOME"))])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -396,7 +396,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .compiled_lib("somelib")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -421,7 +421,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .compiled_libs(["somelib", "otherlib"])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -445,7 +445,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .c3_lib_dir("libs")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -470,7 +470,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .c3_lib_dirs(["libs", &format("{}/.local.libs", env!("HOME"))])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -494,7 +494,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .c3_lib("somelib")
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -519,7 +519,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .c3_libs(["somelib", "otherlib"])
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
@@ -541,7 +541,7 @@ impl C3FFI {
     ///
     /// Example:
     /// ```rs
-    /// c3ne::C3FFInew()
+    /// c3ne::C3FFI::new()
     ///     .file("extern/thing.c3")
     ///     .compile("thing");
     /// ```
