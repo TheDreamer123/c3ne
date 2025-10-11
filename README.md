@@ -29,10 +29,9 @@ fn main() {
 3. Once you have your `build.rs` defined, create `extern/hello.c3`, and write the following inside:
 ```c3
 module hello @export;
-
 import std::io;
 
-fn void greet()
+fn void greet() @extern("greet")
 {
     io::printn("Hello from C3!");
 }
