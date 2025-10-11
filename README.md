@@ -18,7 +18,6 @@ Using c3ne is not very difficult, in general, you should follow these steps:
 c3ne = "0.1.0"
 # ...
 ```
-```
 2. After that, open or create a `build.rs`, and write the following:
 ```rs
 use c3ne::C3FFI;
@@ -26,7 +25,6 @@ use c3ne::C3FFI;
 fn main() {
     C3FFI::new().file("extern/hello.c3").compile("hello");
 }
-```
 ```
 3. Once you have your `build.rs` defined, create `extern/hello.c3`, and write the following inside:
 ```c3
