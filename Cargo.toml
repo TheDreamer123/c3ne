@@ -1,0 +1,12 @@
+[package]
+name = "c3ne"
+authors = [ "TheDreamer123" ]
+license = "MIT OR Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/TheDreamer123/c3ne"
+categories = [ "development-tools::ffi", "development-tools::build-utils" ]
+keywords = [ "build-dependencies", "ffi", "c3" ]
+version = "0.1.0"
+edition = "2024"
+description = "c3ne is a library that aids in compiling C3 code from within a Rust build script in order to use it alongside Rust code."
+
