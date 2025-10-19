@@ -15,7 +15,7 @@ Using c3ne is not very difficult, in general, you should follow these steps:
 1. Add c3ne to your `build-dependencies`:
 ```toml
 [build-dependencies]
-c3ne = "0.1.0"
+c3ne = "0.2.0"
 # ...
 ```
 2. After that, open or create a `build.rs`, and write the following:
@@ -38,7 +38,7 @@ fn void greet() @extern("greet")
 ```
 4. And finally, in your `src/main.rs` write:
 ```rs
-unsafe extern "system" {
+unsafe extern "C" {
     fn greet();
 }
 

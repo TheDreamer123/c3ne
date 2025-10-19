@@ -1,4 +1,11 @@
-use std::{collections::HashMap, env::var, error::Error, path::PathBuf, process::Command};
+use std::{
+    collections::HashMap,
+    env::var,
+    error::Error,
+    path::{Path, PathBuf},
+    process::Command,
+    str::FromStr,
+};
 
 /// Builder for a C3 FFI. Compiles the given files into a static/dynamic library which can then be used from within Rust.
 ///
@@ -564,38 +571,53 @@ impl C3FFI {
     /// }
     /// ```
     pub fn attempt_compilation(&mut self, name: &str) -> Result<(), Box<dyn Error>> {
-        let out_dir = &var("OUT_DIR")?;
-
-        let command_corresponding_linking = match self.linking_mode {
-            LinkingMode::Static => "static-lib",
-            LinkingMode::Dynamic => "dynamic-lib",
-        };
-        let debug_flag = format!("-g{}", if self.debug_info { "" } else { "0" });
-        let optimization_level_flag = format!("-{}", self.optimization_level.to_str());
-        let out_name: String = format!("lib{}", name);
+        let wasm_targets = vec!["wasm32"];
+        let mingw_toolchains = vec!["gnu", "gnullvm"];
 
         let target = var("TARGET")?;
         let target_split: Vec<&str> = target.split("-").collect();
         let where_os = if (&target_split).len() == 4 {
             2
         } else {
-            1usize
+            if wasm_targets.contains(&target_split[0]) {
+                0
+            } else {
+                1usize
+            }
         };
         let mut architecture = target_split[0];
         let mut os = target_split[where_os];
+        let is_wasm = wasm_targets.contains(&os);
         let toolchain = target_split[where_os + 1];
-        if os.eq_ignore_ascii_case("windows")
-            && (toolchain.eq_ignore_ascii_case("gnu") || toolchain.eq_ignore_ascii_case("gnullvm"))
-        {
+        if os.eq_ignore_ascii_case("windows") && mingw_toolchains.contains(&toolchain) {
             os = "mingw";
         }
         if architecture.eq_ignore_ascii_case("x86_64") {
             architecture = "x64";
         }
-        let c3_target = format!("{}-{}", os, architecture);
+        let c3_target = if is_wasm {
+            String::from_str("wasm32").unwrap()
+        } else {
+            format!("{}-{}", os, architecture)
+        };
+
+        let out_dir = &var("OUT_DIR")?;
+
+        let command_corresponding_linking = if is_wasm {
+            "compile"
+        } else {
+            match self.linking_mode {
+                LinkingMode::Static => "static-lib",
+                LinkingMode::Dynamic => "dynamic-lib",
+            }
+        };
+        let debug_flag = format!("-g{}", if self.debug_info { "" } else { "0" });
+        let optimization_level_flag = format!("-{}", self.optimization_level.to_str());
+        let out_name: String = format!("{}{}", if is_wasm { "" } else { "lib" }, name);
 
         let args = {
             let mut args: Vec<&str> = Vec::new();
+
             args.push(command_corresponding_linking);
             args.push(&debug_flag);
             args.push(&optimization_level_flag);
@@ -613,14 +635,6 @@ impl C3FFI {
                 args.push("-z");
                 args.push(&linker_argument);
             }
-            for compiled_lib_dir in &self.compiled_lib_dirs {
-                args.push("-L");
-                args.push(compiled_lib_dir.as_os_str().to_str().unwrap());
-            }
-            for compiled_lib in &self.compiled_libs {
-                args.push("-l");
-                args.push(compiled_lib.as_os_str().to_str().unwrap());
-            }
             for c3_lib_dir in &self.c3_lib_dirs {
                 args.push("--libdir");
                 args.push(c3_lib_dir.as_os_str().to_str().unwrap());
@@ -629,6 +643,26 @@ impl C3FFI {
                 args.push("--lib");
                 args.push(c3_lib.as_os_str().to_str().unwrap());
             }
+
+            if !is_wasm {
+                for compiled_lib_dir in &self.compiled_lib_dirs {
+                    args.push("-L");
+                    args.push(compiled_lib_dir.as_os_str().to_str().unwrap());
+                }
+                for compiled_lib in &self.compiled_libs {
+                    args.push("-l");
+                    args.push(compiled_lib.as_os_str().to_str().unwrap());
+                }
+            } else {
+                args.append(&mut vec![
+                    "--link-libc=no",
+                    "--use-stdlib=yes",
+                    "--no-entry",
+                    "-z",
+                    "--relocatable"
+                ]);
+            }
+
             for file in &self.files {
                 args.push(file.as_os_str().to_str().unwrap());
             }
@@ -644,12 +678,27 @@ impl C3FFI {
             environment_variables.insert(key.clone(), value.clone());
         }
 
-        Command::new(&self.compiler)
-            .args(args)
+        match Command::new(&self.compiler)
+            .args(args.clone())
             .envs(environment_variables)
-            .output()?;
-        println!("cargo:rustc-link-search=native={}", out_dir);
-        println!("cargo:rustc-link-lib=static={}", name);
+            .output() {
+            Ok(_) => {},
+            Err(err) => panic!("{}", err),
+        }
+
+        if !is_wasm {
+            println!("cargo:rustc-link-search=native={}", out_dir);
+            println!("cargo:rustc-link-lib=static={}", name);
+        } else {
+            println!(
+                "cargo:rustc-link-arg={}",
+                Path::new(out_dir)
+                    .join(out_name.clone() + ".wasm")
+                    .as_os_str()
+                    .to_str()
+                    .unwrap()
+            );
+        }
 
         Ok(())
     }
@@ -714,4 +763,3 @@ impl OptimizationLevel {
 
 /// Alternative name for [C3FFI], provided for users looking for a more standard naming approach.
 pub type Build = C3FFI;
-
