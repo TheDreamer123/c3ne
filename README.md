@@ -1,4 +1,4 @@
-**WARNING**: c3ne is very experimental. At the time of writing, only GNU/Linux x64 has been tested, but Windows should, in theory, work. Anything else is even more experimental so expect things to break. Cross-compilation has also not been tested.
+**WARNING**: c3ne is very experimental. At the time of writing, MUSL and GNU/Linux work and can be cross-compiled, Windows now works but not with MinGW and I was unable to cross-compile, Android is also now supported and can be cross-compiled.
 
 ## How to pronounce it
 c3ne is pronounced as 'citrine'.
@@ -15,7 +15,7 @@ Using c3ne is not very difficult, in general, you should follow these steps:
 1. Add c3ne to your `build-dependencies`:
 ```toml
 [build-dependencies]
-c3ne = "0.2.0"
+c3ne = "0.3.0"
 # ...
 ```
 2. After that, open or create a `build.rs`, and write the following:
