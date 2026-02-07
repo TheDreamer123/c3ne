@@ -1,7 +1,7 @@
 [package]
 name = "c3ne"
 authors = [ "TheDreamer123" ]
-license = "LGPL-3.0-or-later"
+license = "LGPL-2.1-or-later"
 readme = "README.md"
 repository = "https://github.com/TheDreamer123/c3ne"
 categories = [ "development-tools::ffi", "development-tools::build-utils" ]
